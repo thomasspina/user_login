@@ -7,7 +7,6 @@
 
 <body>
     <div class="content">
-
     <p>hello [username]</p> 
     </div>
 </body>

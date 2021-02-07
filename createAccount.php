@@ -10,18 +10,20 @@
     </div>
     <div class="login">
         <form>
-            <label for="email">Email:</label>
-            <input type="text" id="email"><br>
+            <fieldset>
+                <label for="email">Email:</label>
+                <input type="text" id="email"><br>
 
-            <label for="username">Username:</label>
-            <input type="text" id="username"><br>
+                <label for="username">Username:</label>
+                <input type="text" id="username"><br>
 
-            <label for="password">Password:</label>
-            <input type="text" id="password"><br>
+                <label for="password">Password:</label>
+                <input type="text" id="password"><br>
 
-            <input type="submit" value="Create">
+                <input type="submit" value="Create">
+                <a href="index.php">Back</a>
+            </fieldset>
         </form>
-        <a href="index.php">Back</a>
     </div>
 
 </body>
