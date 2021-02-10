@@ -9,15 +9,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST["email"]))) {
         $email_err = "Please enter an email address.";
     } else {
-        $sql = "SELECT id FROM users WHERE email = ?"; 
+        $sql = "SELECT id FROM users WHERE email = ?"; // ? is a placeholder
         
-        if ($stmt = mysqli_prepare($link, $sql)) { 
-            mysqli_stmt_bind_param($stmt, "s", $param_email); 
+        if ($stmt = mysqli_prepare($link, $sql)) { // prepares a statement to use on db, returns false if error
+            mysqli_stmt_bind_param($stmt, "s", $param_email); // binds parameters to the prepared statement
 
             $param_email = trim($_POST["email"]);
 
             if (mysqli_stmt_execute($stmt)) {
-                mysqli_stmt_store_result($stmt);
+                mysqli_stmt_store_result($stmt); // stores results client side
 
                 if (mysqli_stmt_num_rows($stmt) == 1) {
                     $email_err = "There already exists an account with that email.";
@@ -30,7 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_stmt_close($stmt);
         }
     }
+
     // TODO find a way to combine the statement below with the one above. Make a function or something. Seems redundant
+
     if (empty(trim($_POST["username"]))) {
         $usernam_err = "Please enter a username.";
     } else {
