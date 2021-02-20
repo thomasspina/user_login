@@ -1,6 +1,6 @@
 <?php
 
-include_once "config.php";
+require_once "config.php";
 
 $email = $username = $password = $confirm_password = "";
 $email_err = $usernam_err = $password_err = $confirm_password_err = "";
@@ -9,6 +9,8 @@ $email_err = $usernam_err = $password_err = $confirm_password_err = "";
 function checkIdentifierValidity($var, $err, $name, $link) {
     if (empty(trim($_POST[$name]))) {
         $err = "Please enter a valid input.";
+    } elseif ( preg_match('@', $_POST[$name]) === 1) {
+        // TODO if @ in username, invalid
     } else {
         $sql = "SELECT id FROM users WHERE {$name} = ?"; // ? is a placeholder
         
@@ -21,7 +23,7 @@ function checkIdentifierValidity($var, $err, $name, $link) {
                 mysqli_stmt_store_result($stmt); // stores results client side
 
                 if (mysqli_stmt_num_rows($stmt) == 1) {
-                    $err = "This is already in use by another account.";
+                    $err = "This {$name} is already in use by another account.";
                 } else {
                     $var = trim($_POST[$name]);
                 }
@@ -42,6 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password_err = "Please enter a password.";
     } elseif (strlen(trim($_POST["password"])) < 6) {
         $password_err = "Your password must have at least 6 characters.";
+
+    // if password contains only numbers or if it contains no numbers
     } elseif (is_numeric(trim($_POST["password"])) || 1 !== preg_match('~[0-9]~', trim($_POST["password"]))) {
         $password_err = "Your password must contain both letters and numbers.";
     } else {
@@ -57,8 +61,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    $sql = "INSERT INTO users (email, username, password) VALUES (?, ?, ?)";
 
-    
+    if($stmt = mysqli_prepare($link, $sql)) {
+        mysqli_stmt_bind_param($stmt, "sss", $param_email, $param_username, $param_password);
+
+        $param_email = $email;
+        $param_username = $username;
+        $param_password = password_hash($password, PASSWORD_DEFAULT);
+
+        // redirects on execute success
+        if (mysqli_stmt_execute($stmt)) {
+            header("location: login.php");
+        } else {
+            echo "Something went wrong. Please try again later.";
+        }
+
+        mysqli_stmt_close($link);
+    }
+
+    mysqli_close($link);
 }
 
 ?>

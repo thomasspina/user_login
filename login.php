@@ -1,11 +1,34 @@
 <?php 
 
-include_once "condig.php";
+session_start();
 
-$username = $password = "";
-$usernam_err = $password_err = "";
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    header("location: home.php");
+    exit;
+}
+
+require_once "config.php";
 
 
+// TODO in the register.php page. Username cannot have @ in them to differentiate between email and username
+$identifier = $password = "";
+$identifier_err = $password_err = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty(trim($_POST["identifier"]))) {
+        $identifier_err = "Please enter a username or an email.";
+    } else {
+        $identifier = trim($_POST["identifier"]);
+    }
+
+    if (empty(trim($_POST["password"]))) {
+        $password_err = "Please enter your password.";
+    } else {
+        $password = trim($_POST["password"]);
+    }
+
+    
+}
 
 ?>
 
@@ -22,8 +45,8 @@ $usernam_err = $password_err = "";
     <div class="login">
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" accept-charset="UTF-8">
             <fieldset>
-                <label for="id">Email:</label>
-                <input type="text" id="id" name="id"><br>
+                <label for="id">Username or email:</label>
+                <input type="text" id="identifier" name="identifier"><br>
                 <label for="password">Password:</label>
                 <input type="text" id="password" name="password"><br>
                 <input type="submit" value="Login">
