@@ -9,8 +9,10 @@ $email_err = $usernam_err = $password_err = $confirm_password_err = "";
 function checkIdentifierValidity($var, $err, $name, $link) {
     if (empty(trim($_POST[$name]))) {
         $err = "Please enter a valid input.";
-    } elseif ( preg_match('@', $_POST[$name]) === 1) {
-        // TODO if @ in username, invalid
+
+    // filter @ from usernames since use it to differentiate emails from username when login
+    } elseif (preg_match('@', $_POST[$name]) === 1 && $name == "email") {
+        $err = "Your username cannot contain an @ character.";
     } else {
         $sql = "SELECT id FROM users WHERE {$name} = ?"; // ? is a placeholder
         

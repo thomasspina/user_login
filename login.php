@@ -9,8 +9,6 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 
 require_once "config.php";
 
-
-// TODO in the register.php page. Username cannot have @ in them to differentiate between email and username
 $identifier = $password = "";
 $identifier_err = $password_err = "";
 
@@ -27,9 +25,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = trim($_POST["password"]);
     }
 
-    
-}
+    // validate creds
+    if (empty($identifier_err) && empty($password_err)) {
+        $sql = "";
 
+        if (preg_match('@', $_POST["identifier"]) === 1) {
+            $sql = "SELECT id, email, username, password FROM users WHERE email = ?";
+        } else {
+            $sql = "SELECT id, email, username, password FROM users WHERE username = ?";
+        }
+
+        if ($stmt = mysqli_prepare($link,$sql)) {
+            mysqli_stmt_bind_param($stmt, "s", $param_identifier);
+
+            $param_identifier = $identifier;
+
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_store_result($stmt);
+
+                // verify the user exists
+                if (mysqli_stmt_num_rows($stmt) == 1) {
+                    mysqli_stmt_bind_result($stmt, $id, $username, $email, $hashed_password);
+                
+                    // fetches bound variables
+                    if (mysqli_stmt_fetch($stmt)) {
+
+                        if (password_verify($password, $hashed_password)) {
+                            session_start();
+
+                            $_SESSION["loggedin"] = true;
+                            $_SESSION["id"] = $id;
+                            $_SESSION["username"] = $username;
+                            $_SESSION["email"] = $email;
+
+                            header("location: home.php");
+                        } else {
+                            $password_err = "The password you entered was not valid.";
+                        }
+                    } else {
+                        $identifier_err = "There is no account with that username or email.";
+                    }
+                } else {
+                    echo "Oops! Something went wrong. Please try again later.";
+                }
+
+                mysqli_stmt_close($stmt);
+            }
+        }
+    }
+    
+    mysqli_close($link);
+}
 ?>
 
 <!DOCTYPE html>
