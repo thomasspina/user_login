@@ -3,7 +3,7 @@
 session_start();
 
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
-    header("location: home.php");
+    header("location: index.php");
     exit;
 }
 
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($identifier_err) && empty($password_err)) {
         $sql = "";
 
-        if (preg_match('@', $_POST["identifier"]) === 1) {
+        if (preg_match('~@~', $_POST["identifier"]) === 1) {
             $sql = "SELECT id, email, username, password FROM users WHERE email = ?";
         } else {
             $sql = "SELECT id, email, username, password FROM users WHERE username = ?";
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (mysqli_stmt_num_rows($stmt) == 1) {
                     mysqli_stmt_bind_result($stmt, $id, $username, $email, $hashed_password);
                 
-                    // fetches bound variables
+                    // fetches the variables that were bound
                     if (mysqli_stmt_fetch($stmt)) {
 
                         if (password_verify($password, $hashed_password)) {
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["username"] = $username;
                             $_SESSION["email"] = $email;
 
-                            header("location: home.php");
+                            header("location: index.php");
                         } else {
                             $password_err = "The password you entered was not valid.";
                         }
@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="password">Password:</label>
                 <input type="text" id="password" name="password"><br>
                 <input type="submit" value="Login">
-                <a href="createAccount.php">I don't have an account</a>
+                <a href="register.php">I don't have an account</a>
             </fieldset>
         </form>
     </div>

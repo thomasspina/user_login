@@ -11,7 +11,7 @@ function checkIdentifierValidity($var, $err, $name, $link) {
         $err = "Please enter a valid input.";
 
     // filter @ from usernames since use it to differentiate emails from username when login
-    } elseif (preg_match('@', $_POST[$name]) === 1 && $name == "email") {
+    } elseif (preg_match('~@~', $_POST[$name]) === 1 && $name == "email") {
         $err = "Your username cannot contain an @ character.";
     } else {
         $sql = "SELECT id FROM users WHERE {$name} = ?"; // ? is a placeholder
@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Something went wrong. Please try again later.";
         }
 
-        mysqli_stmt_close($link);
+        mysqli_stmt_close($stmt);
     }
 
     mysqli_close($link);
