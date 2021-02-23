@@ -19,7 +19,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 <body>
     <div class="content">
-    <p>hello [username]</p> 
+    <p>hello <?php echo $_SESSION["username"]?></p> 
     <a href="logout.php">Sign Out of Your Account</a>
     </div>
 </body>

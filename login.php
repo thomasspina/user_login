@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // verify the user exists
                 if (mysqli_stmt_num_rows($stmt) == 1) {
-                    mysqli_stmt_bind_result($stmt, $id, $username, $email, $hashed_password);
+                    mysqli_stmt_bind_result($stmt, $id, $email, $username, $hashed_password);
                 
                     // fetches the variables that were bound
                     if (mysqli_stmt_fetch($stmt)) {
@@ -66,6 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $identifier_err = "There is no account with that username or email.";
                     }
                 } else {
+
+                    // TODO last bug to fix. this popped up when i was testing the loggin errors (loggin errors don't work too well either)
                     echo "Oops! Something went wrong. Please try again later.";
                 }
 
@@ -93,8 +95,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <fieldset>
                 <label for="id">Username or email:</label>
                 <input type="text" id="identifier" name="identifier"><br>
+                <span><?php echo $identifier_err; ?></span><br>
+
                 <label for="password">Password:</label>
-                <input type="text" id="password" name="password"><br>
+                <input type="password" id="password" name="password"><br>
+                <span><?php echo $password_err; ?></span><br>
+
                 <input type="submit" value="Login">
                 <a href="register.php">I don't have an account</a>
             </fieldset>
