@@ -80,11 +80,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
+            crossorigin="anonymous">
+
+    <style type="text/css">
+        body{ font: 14px sans-serif }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -95,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <fieldset>
 
 
-                <span><?php echo $err; ?></span><br>
+                <span class="help-block"><?php echo $err; ?></span><br>
                 <label for="id">Username or email:</label>
                 <input type="text" id="identifier" name="identifier"><br>
 

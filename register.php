@@ -92,37 +92,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>register</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
+            crossorigin="anonymous">
+
+    <style type="text/css">
+        body{ font: 16px sans-serif; }
+        .wrapper{ width: 500px; padding: 40px; }
+    </style>
 </head>
 <body>
-    <div class="header">
-        <h3>please create an account</h3>
-    </div>
-    <div class="register">
+    <div class="wrapper">
+        <h3>Register</h3>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" accept-charset="UTF-8">
             <fieldset>
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" value="<?php echo $email; ?>"><br>
-                <span><?php echo $email_err; ?></span><br>
 
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<?php echo $username; ?>"><br>
-                <span><?php echo $usernam_err; ?></span><br>
+                <div class="form-group <?php echo (!empty($email_err) ? 'has-error' : ''); ?>">
+                    <label for="email">Email:</label>
+                    <input class="form-control" type="text" id="email" name="email" value="<?php echo $email; ?>"><br>
+                    <span class="help-block"><?php echo $email_err; ?></span><br>
+                </div>
+                
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="<?php echo $password; ?>"><br>
-                <span><?php echo $password_err; ?></span><br>
-
-                <label for="confirm_password">Confirm password:</label>
-                <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $confirm_password; ?>"><br>
-                <span><?php echo $confirm_password_err; ?></span><br>
-
-                <input type="submit" value="Create">
-                <a href="index.php">Back</a>
+                <div class="form-group <?php echo (!empty($usernam_err) ? 'has-error' : ''); ?>">
+                    <label for="username">Username:</label>
+                    <input class="form-control" type="text" id="username" name="username" value="<?php echo $username; ?>"><br>
+                    <span class="help-block"><?php echo $usernam_err; ?></span><br>
+                </div>
+                
+                <div class="form-group <?php echo (!empty($password_err) ? 'has-error' : ''); ?>">
+                    <label for="password">Password:</label>
+                    <input class="form-control" type="password" name="password" value="<?php echo $password; ?>"><br>
+                    <span class="help-block"><?php echo $password_err; ?></span><br>
+                </div>
+                
+                <div class="form-group <?php echo (!empty($confirm_password_err) ? 'has-error' : ''); ?>">
+                    <label for="confirm_password">Confirm password:</label>
+                    <input class="form-control" type="password" id="confirm_password" name="confirm_password" value="<?php echo $confirm_password; ?>"><br>
+                    <span class="help-block"><?php echo $confirm_password_err; ?></span><br>
+                </div>
+            
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Create">
+                    <input type="reset" class="btn btn-default" value="Reset form"> 
+                </div>
+                <a href="login.php">I already have an account</a>
             </fieldset>
         </form>
     </div>
