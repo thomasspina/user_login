@@ -10,7 +10,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 require_once "config.php";
 
 $identifier = $password = "";
-$identifier_err = $password_err = "";
+$err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST["identifier"]))) {
@@ -49,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                     // fetches the variables that were bound
                     if (mysqli_stmt_fetch($stmt)) {
-
                         if (password_verify($password, $hashed_password)) {
                             session_start();
 
@@ -60,18 +59,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             header("location: index.php");
                         } else {
-                            $password_err = "The password you entered was not valid.";
+                            $err = "The username / email or password you entered was not valid.";
                         }
                     } else {
-                        $identifier_err = "There is no account with that username or email.";
+                        $err = "The username / email or password you entered was not valid.";
                     }
                 } else {
-
-                    // TODO last bug to fix. this popped up when i was testing the loggin errors (loggin errors don't work too well either)
-                    echo "Oops! Something went wrong. Please try again later.";
+                    $err = "The username / email or password you entered was not valid.";
                 }
 
                 mysqli_stmt_close($stmt);
+
+            } else {
+                echo "Oops! Something went wrong. Please try again later.";
             }
         }
     }
@@ -93,13 +93,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login">
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" accept-charset="UTF-8">
             <fieldset>
+
+
+                <span><?php echo $err; ?></span><br>
                 <label for="id">Username or email:</label>
                 <input type="text" id="identifier" name="identifier"><br>
-                <span><?php echo $identifier_err; ?></span><br>
 
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password"><br>
-                <span><?php echo $password_err; ?></span><br>
 
                 <input type="submit" value="Login">
                 <a href="register.php">I don't have an account</a>
