@@ -10,17 +10,17 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 require_once "config.php";
 
 $identifier = $password = "";
-$err = "";
+$identifier_err = $password_err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST["identifier"]))) {
-        $identifier_err = "Please enter a username or an email.";
+        $identifier_err = "Please enter a username or an email";
     } else {
         $identifier = trim($_POST["identifier"]);
     }
 
     if (empty(trim($_POST["password"]))) {
-        $password_err = "Please enter your password.";
+        $password_err = "Please enter your password";
     } else {
         $password = trim($_POST["password"]);
     }
@@ -59,19 +59,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             header("location: index.php");
                         } else {
-                            $err = "The username / email or password you entered was not valid.";
+                            $identifier_err = "The username / email or password you entered was not valid";
+                            $password_err = "The username / email or password you entered was not valid";
                         }
                     } else {
-                        $err = "The username / email or password you entered was not valid.";
+                        $identifier_err = "The username / email or password you entered was not valid";
+                        $password_err = "The username / email or password you entered was not valid";
                     }
                 } else {
-                    $err = "The username / email or password you entered was not valid.";
+                    $identifier_err = "The username / email or password you entered was not valid";
+                    $password_err = "The username / email or password you entered was not valid";
                 }
 
                 mysqli_stmt_close($stmt);
 
             } else {
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oops! Something went wrong. Please try again later";
             }
         }
     }
@@ -81,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>login</title>
@@ -91,30 +94,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <style type="text/css">
         body{ font: 14px sans-serif }
+        .wrapper{ width: 500px; padding: 40px;  }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h3>please login</h3>
-    </div>
-    <div class="login">
+
+    <div class="wrapper">
+        <h3>Login</h3>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" accept-charset="UTF-8">
-            <fieldset>
-
-
-                <span class="help-block"><?php echo $err; ?></span><br>
+            <div class="form-group <?php echo (!empty($identifier_err)) ? 'has-error' : ''; ?>">
                 <label for="id">Username or email:</label>
-                <input type="text" id="identifier" name="identifier"><br>
-
+                <input class="form-control" type="text" id="identifier" name="identifier">
+                <span class="help-block"><?php echo $identifier_err; ?></span>
+            </div>
+            
+            <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password"><br>
+                <input class="form-control" type="password" id="password" name="password">
+                <span class="help-block"><?php echo $password_err; ?></span>
+            </div>
 
-                <input type="submit" value="Login">
-                <a href="register.php">I don't have an account</a>
-            </fieldset>
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="Login">
+            </div>
+            <a href="register.php">I don't have an account</a>
         </form>
     </div>
-
 </body>
-
 </html>

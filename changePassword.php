@@ -2,19 +2,26 @@
 
 session_start();
 
-// redirects to login if not already
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: login.php");
     exit;
 }
 
+require_once("config.php");
+
+$new_password = $confirm_password = "";
+$new_password_err = $confirm_password_err = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+}
 ?>
 
-<!doctype html>
+<!doctype hmtl>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home</title>
+    <title>change password</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
             integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
             crossorigin="anonymous">
@@ -24,20 +31,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         .wrapper{ width: 500px; padding: 40px; }
     </style>
 </head>
-
 <body>
-    <div class="wrapper">
-        <div>
-            <h3>Hello <?php echo $_SESSION["username"]?></h3><br>
-            <p>Welcome to your very own homepage.</p>
-        </div>
-        
 
-        <div>
-            <p>Change account <a href="changeInfo.php">information</a> or <a href="changePassword.php">password</a></p><br>
-            <a href="logout.php">Sign out</a>
-        </div>
-    </div>
+
 </body>
-
 </html>
