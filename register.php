@@ -12,7 +12,7 @@ function checkIdentifierValidity(&$var, &$err, $name, $link) { // & is for point
 
     // filter @ from usernames since use it to differentiate emails from username when login
     } elseif (preg_match('~@~', $_POST[$name]) === 1 && $name == "username") {
-        $err = "Your username cannot contain an @ character";
+        $err = "Your username cannot contain the charcter '@'";
     
     // if email doesn't countain @ then it isn't an email
     } elseif (preg_match('~@~', $_POST[$name]) !== 1 && $name == "email") {
@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if ($usernam_err == "" && $password_err == "" && $email_err == "" && $confirm_password_err == "") {
+    if (empty($usernam_err) &&  empty($password_err) &&  empty($email_err) &&  empty($confirm_password_err)) {
         $sql = "INSERT INTO users (email, username, password) VALUES (?, ?, ?)";
 
         if($stmt = mysqli_prepare($link, $sql)) {

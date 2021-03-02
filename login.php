@@ -59,16 +59,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             header("location: index.php");
                         } else {
-                            $identifier_err = "The username / email or password you entered was not valid";
-                            $password_err = "The username / email or password you entered was not valid";
+                            $password_err = $identifier_err = "The username / email or password you entered was not valid";
                         }
                     } else {
-                        $identifier_err = "The username / email or password you entered was not valid";
-                        $password_err = "The username / email or password you entered was not valid";
+                        $password_err = $identifier_err = "The username / email or password you entered was not valid";
                     }
                 } else {
-                    $identifier_err = "The username / email or password you entered was not valid";
-                    $password_err = "The username / email or password you entered was not valid";
+                    $password_err = $identifier_err = "The username / email or password you entered was not valid";
                 }
 
                 mysqli_stmt_close($stmt);
