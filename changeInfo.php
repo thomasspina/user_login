@@ -23,36 +23,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if (!empty(trim($_POST["new_username"])) && preg_match('~@~', $_POST["new_username"]) === 1) {
-            $new_password_err = "Your username cannot contain the charcter '@'";
+            $new_username_err = "Your username cannot contain the character '@'";
         } else {
             $new_username = $_POST["new_username"]; // same as above
         }
     }
 
     if (empty($new_email_err) && empty($new_username_err)) {
+        if (!empty($new_email) && !empty($new_username)) {
+            $sql = "UPDATE users SET email = ?, username = ? WHERE id = ?";
 
-        $sql = "";
-        if (empty($new_email)) {
-            $sql = "UPDATE users SET email = ? WHERE id = ?";
-        } elseif (empty($new_username)) {
-            $sql = "UPDATE users SET username = ? WHERE id = ?";
-        }
-
-        if ($stmt = mysqli_prepare($link, $sql)) {
-            mysqli_stmt_bind_param($stmt, "si", $param, $param_id);
-
-            $param = (!empty($new_username) ? $new_username : $new_email);
-            $param_id = $_SESSION["id"];
-
-            if (mysqli_stmt_execute($stmt)) {
-                session_destroy();
-                header("location: login.php");
-                exit;
-            } else {
-                echo "Oops! Something went wrong. Please try again later.";
+            if ($stmt = mysqli_prepare($link, $sql)) {
+                mysqli_stmt_bind_param($stmt, "ssi", $param_email, $param_username, $param_id);
+    
+                $param_username = $new_username;
+                $param_email = $new_email;
+                $param_id = $_SESSION["id"];
+    
+                if (mysqli_stmt_execute($stmt)) {
+                    session_destroy();
+                    header("location: login.php");
+                    exit;
+                } else {
+                    echo "Oops! Something went wrong. Please try again later.";
+                }
+                mysqli_stmt_close($stmt);
             }
-            mysqli_stmt_close($stmt);
-        }
+        } else {
+            $sql = "";
+
+            if (empty($new_email)) {
+                $sql = "UPDATE users SET username = ? WHERE id = ?";
+            } else {
+                $sql = "UPDATE users SET email = ? WHERE id = ?";
+            }
+
+            if ($stmt = mysqli_prepare($link, $sql)) {
+                mysqli_stmt_bind_param($stmt, "si", $param, $param_id);
+    
+                $param = (!empty($new_username) ? $new_username : $new_email);
+                $param_id = $_SESSION["id"];
+    
+                if (mysqli_stmt_execute($stmt)) {
+                    session_destroy();
+                    header("location: login.php");
+                    exit;
+                } else {
+                    echo "Oops! Something went wrong. Please try again later.";
+                }
+                mysqli_stmt_close($stmt);
+            }
+        } 
     }
     mysqli_close($link);
 }
@@ -81,13 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-group <?php echo (!empty($new_email_err)) ? 'has-error' : ''; ?>">
             <label for="new_email">New email</label>
             <input type="text" name="new_email" id="new_email" class="form-control" value="<?php echo $new_email; ?>">
-            <span class="help-block"><?php echo $new_password_err; ?></span>
+            <span class="help-block"><?php echo $new_email_err; ?></span>
         </div>
 
         <div class="form-group <?php echo (!empty($new_username_err)) ? 'has-error' : ''; ?>">
             <label for="new_username">New username</label>
             <input type="text" name="new_username" id="new_username" class="form-control" value="<?php echo $confirm_password; ?>">
-            <span class="help-block"><?php echo $confirm_password_err; ?></span>
+            <span class="help-block"><?php echo $new_username_err; ?></span>
         </div>
 
         <div class="form-group">

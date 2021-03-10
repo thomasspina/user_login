@@ -12,7 +12,7 @@ function checkIdentifierValidity(&$var, &$err, $name, $link) { // & is for point
 
     // filter @ from usernames since use it to differentiate emails from username when login
     } elseif (preg_match('~@~', $_POST[$name]) === 1 && $name == "username") {
-        $err = "Your username cannot contain the charcter '@'";
+        $err = "Your username cannot contain the character '@'";
     
     // if email doesn't countain @ then it isn't an email
     } elseif (preg_match('~@~', $_POST[$name]) !== 1 && $name == "email") {
